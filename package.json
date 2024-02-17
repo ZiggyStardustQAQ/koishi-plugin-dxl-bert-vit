@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-dxl-bert-vit",
-  "description": "",
-  "version": "0.0.1",
+  "description": "使用 [ModelScope](https://www.modelscope.cn/studios/xzjosh/Bert-VITS2/summary) 平台的 BERT-VITS2 模型实现将文本转换为东雪莲的语音。",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
@@ -9,13 +9,26 @@
     "dist"
   ],
   "license": "MIT",
-  "scripts": {},
+  "author": "Nawyjx <3373167460@qq.com>",
+  "homepage": "https://www.npmjs.com/package/koishi-plugin-dxl-bert-vit?activeTab=readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/araea/koishi-plugin-dxl-bert-vit.git"
+  },
   "keywords": [
     "chatbot",
     "koishi",
-    "plugin"
+    "plugin",
+    "dxl",
+    "东雪莲",
+    "AI东雪莲",
+    "vit",
+    "bertVit",
+    "ModelScope",
+    "魔塔",
+    "语音",
+    "audio"
   ],
-  "devDependencies": {},
   "peerDependencies": {
     "koishi": "^4.16.8"
   }

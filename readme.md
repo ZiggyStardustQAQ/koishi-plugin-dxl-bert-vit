@@ -4,7 +4,7 @@
 
 ## 🎐 简介
 
-- 这是一个基于 Koishi 框架的语音合成插件，使用 ModelScope 平台的 BERT-VITS2 模型实现将文本转换为东雪莲的语音。
+- 这是一个基于 Koishi 框架的语音合成插件，使用 ModelScope 平台的 BERT-VITS2 模型实现将文本转换为东雪莲/塔菲的语音。
 
 ## 🎉 安装
 
@@ -25,15 +25,15 @@
 - 显示语音合成使用帮助。
 
 ```
-dxlBertVit
+bertVit
 ```
 
-### dxlBertVit.say
+### bertVit.东雪莲/塔菲
 
-- 将输入的文本转换为东雪莲的语音。
+- 将输入的文本转换为东雪莲/塔菲的语音。
 
 ```
-dxlBertVit.say 你好
+bertVit.东雪莲/塔菲 你好
 ```
 
 ## 🍧 致谢

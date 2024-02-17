@@ -34,7 +34,7 @@ export function apply(ctx: Context) {
     .action(async ({session}) => {
       await session.execute(`dxlBertVit -h`)
     })
-  ctx.command('dxlBertVit.say [textContent:text]', 'AI东雪莲语音合成帮助')
+  ctx.command('dxlBertVit.say [textContent:text]', 'AI东雪莲语音合成')
     .action(async ({session}, textContent) => {
       const {username, timestamp} = session;
       textContent = textContent.trim();

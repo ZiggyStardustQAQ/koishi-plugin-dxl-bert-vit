@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-dxl-bert-vit",
   "description": "使用 [ModelScope](https://www.modelscope.cn/studios/xzjosh/Bert-VITS2/summary) 平台的 BERT-VITS2 模型实现将文本转换为东雪莲的语音。",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [

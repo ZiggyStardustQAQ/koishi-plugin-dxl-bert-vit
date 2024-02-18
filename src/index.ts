@@ -15,13 +15,14 @@ export const usage = `## 🌈 使用
 bertVit
 \`\`\`
 
-### bertVit.东雪莲/塔菲
+### bertVit.东雪莲/塔菲/坏女人星瞳...
 
-- 将输入的文本转换为东雪莲/塔菲的语音。
+- 将输入的文本转换为东雪莲/塔菲/坏女人星瞳...的语音。
 
 \`\`\`
-bertVit.东雪莲/塔菲 你好
+bertVit.东雪莲/塔菲/坏女人星瞳... 你好
 \`\`\`
+
 `
 
 export interface Config {
@@ -30,29 +31,38 @@ export interface Config {
 export const Config: Schema<Config> = Schema.object({})
 
 export function apply(ctx: Context) {
-  const logger = ctx.logger('dxlBertVit')
+  const logger = ctx.logger('dxlBertVit');
+
   ctx.command('bertVit', 'AI东雪莲/塔菲语音合成帮助')
     .action(async ({session}) => {
-      await session.execute(`bertVit -h`)
-    })
+      await session.execute(`bertVit -h`);
+    });
+
   ctx.command('bertVit.东雪莲 [textContent:text]', 'AI东雪莲语音合成')
     .action(async ({session}, textContent) => {
-      const versions = ["Azuma-Bert-VITS2-2.3", "Azuma-Bert-VITS2.0.2", "Azuma-Bert-VITS2"];
-      await handleVoiceSynthesis(session, textContent, versions, "azuma");
+      await handleVoiceSynthesis(session, textContent, ["Azuma-Bert-VITS2-2.3", "Azuma-Bert-VITS2.0.2", "Azuma-Bert-VITS2"], "azuma");
     });
+
   ctx.command('bertVit.塔菲 [textContent:text]', 'AI塔菲语音合成')
     .action(async ({session}, textContent) => {
-      const versions = ["Taffy-Bert-VITS2.0.2", "Taffy-Bert-VITS2"];
-      await handleVoiceSynthesis(session, textContent, versions, "tafei");
+      await handleVoiceSynthesis(session, textContent, ["Taffy-Bert-VITS2.0.2", "Taffy-Bert-VITS2"], "tafei");
     });
+
   ctx.command('bertVit.坏女人星瞳 [textContent:text]', 'AI坏女人星瞳语音合成')
     .action(async ({session}, textContent) => {
-      const versions = ["badXT-Bert-VITS2-2.3"];
-      await handleVoiceSynthesis(session, textContent, versions, "xingtong");
+      await handleVoiceSynthesis(session, textContent, ["badXT-Bert-VITS2-2.3"], "xingtong");
     });
 
+  ctx.command('bertVit.丁真 [textContent:text]', 'AI丁真语音合成')
+    .action(async ({session}, textContent) => {
+      await handleVoiceSynthesis(session, textContent, ["DZ-Bert-VITS2-2.3"], "dingzhen");
+    });
 
-// hs*
+  ctx.command('bertVit.孙笑川 [textContent:text]', 'AI孙笑川语音合成')
+    .action(async ({session}, textContent) => {
+      await handleVoiceSynthesis(session, textContent, ["SXC-Bert-VITS2"], "sunxiaochuan");
+    });
+
   async function postData(url = '', data = {}) {
     const response = await fetch(url, {
       method: 'POST',
@@ -81,15 +91,19 @@ export function apply(ctx: Context) {
       "Taffy-Bert-VITS2.0.2": "永雏塔菲",
       "Taffy-Bert-VITS2": "taffy",
       "badXT-Bert-VITS2-2.3": "坏女人星瞳",
+      "DZ-Bert-VITS2-2.3": "丁真",
+      "SXC-Bert-VITS2": "孙笑川",
     };
 
-    const sliderValues: { [key: string]: number } = {
+    const sliderValues = {
       azuma: 0.5,
       tafei: 0.2,
       xingtong: 0.6,
+      dingzhen: 0.5,
+      sunxiaochuan: 0.2,
     };
 
-    const sliderValue = sliderValues[type] || sliderValues.default;
+    const sliderValue = sliderValues[type];
 
     for (const version of versions) {
       const postDataUrl = `https://www.modelscope.cn/api/v1/studio/xzjosh/${version}/gradio/run/predict?backend_url=%2Fapi%2Fv1%2Fstudio%2Fxzjosh%2F${version}%2Fgradio%2F&sdk_version=3.47.1&t=${timestamp}&studio_token=c8fe7633-baa8-4083-a09a-70c45ed8851e`;
@@ -140,5 +154,4 @@ export function apply(ctx: Context) {
       }
     }
   }
-
 }

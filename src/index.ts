@@ -52,7 +52,7 @@ export function apply(ctx: Context) {
     "星瞳": ["2568-Bert-VITS2", "XingTong-Bert-VITS2"],
     "向晚": ["Ava-Bert-VITS2"],
     "剑魔": ["Aatrox-Bert-VITS2"],
-    "乃琳": ["Queen-Bert-VITS2-2.3"],
+    // "乃琳": ["Queen-Bert-VITS2-2.3"],
     "贝拉": ["Bella-Bert-VITS2"],
     "扇宝": ["ShanBao-Bert-VITS2"],
     "恬豆": ["Bekki-Bert-VITS2", "TianDou-Bert-VITS2"],

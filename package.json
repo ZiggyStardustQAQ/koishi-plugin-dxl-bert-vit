@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-dxl-bert-vit",
   "description": "随开随用，将文本转换为东雪莲|塔菲|坏女人星瞳...的语音，使用 [ModelScope](https://www.modelscope.cn/studios/xzjosh/Bert-VITS2/summary) 社区的 BERT-VITS2 模型。",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [

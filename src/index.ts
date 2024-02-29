@@ -327,9 +327,8 @@ export function apply(ctx: Context) {
       try {
         const response = await postData(postDataUrl, requestBody);
 
-        const [, {name}] = response?.data || [];
-
-        if (name) {
+        if (response && response.data && response.data[1] && response.data[1].name) {
+          const name = response.data[1].name;
           const fileUrl = `https://www.modelscope.cn/api/v1/studio/${author}/${version}/gradio/file=${name}`;
           await session.send(h.audio(fileUrl));
           break;

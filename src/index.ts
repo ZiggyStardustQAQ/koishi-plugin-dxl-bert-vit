@@ -48,6 +48,12 @@ export function apply(ctx: Context) {
       }
       await session.send(`嗯~`);
       let resultUrl = '';
+      const generateHash = () => {
+        return Math.random().toString(36).substring(2, 13);
+      };
+
+      const hash = generateHash();
+      // const hash = `7kbv40kyc3g`;
       fetch('https://ap123-sdxl-lightning.hf.space/queue/join?__theme=light', {
         method: 'POST',
         headers: {
@@ -70,14 +76,14 @@ export function apply(ctx: Context) {
           event_data: null,
           fn_index: 1,
           trigger_id: 7,
-          session_hash: "hj5ib8ch34m"
+          session_hash: hash
         })
       }).then(response => {
         // logger.success(response);
       }).catch(error => {
         logger.error('请求出错:', error);
       });
-      fetch('https://ap123-sdxl-lightning.hf.space/queue/data?session_hash=hj5ib8ch34m', {
+      fetch(`https://ap123-sdxl-lightning.hf.space/queue/data?session_hash=${hash}`, {
         method: 'GET',
         headers: {
           'sec-ch-ua': '"Chromium";v="124", "Microsoft Edge";v="124", "Not-A.Brand";v="99"',

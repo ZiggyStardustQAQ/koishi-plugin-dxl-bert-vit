@@ -37,6 +37,109 @@ export function apply(ctx: Context) {
       await session.execute(`bertVit -h`);
     });
 
+  ctx.command('SDXL-Lightning [prompt:text]', '字节跳动AI图像生成')
+    .option('step', '-s <step:number> 步长',{fallback: 4})
+    .action(async ({session,options}, prompt) => {
+      if (!prompt) {
+        return  `请输入 prompt。`;
+      }
+      if (options.step !== 1 && options.step !== 2 && options.step !== 4 && options.step !== 8){
+        return `Step 只能是 1、2、4、8 中的一个。`
+      }
+      await session.send(`嗯~`);
+      let resultUrl = '';
+      fetch('https://ap123-sdxl-lightning.hf.space/queue/join?__theme=light', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'sec-ch-ua': '"Chromium";v="124", "Microsoft Edge";v="124", "Not-A.Brand";v="99"',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-ch-ua-mobile': '?0',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+          'Accept': '*/*',
+          'Origin': 'https://ap123-sdxl-lightning.hf.space',
+          'Sec-Fetch-Site': 'same-origin',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Dest': 'empty',
+          'Referer': 'https://ap123-sdxl-lightning.hf.space/?__theme=light',
+          'Accept-Encoding': 'gzip, deflate, br, zstd',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6'
+        },
+        body: JSON.stringify({
+          data: [`${prompt}`, `${options.step}-Step`],
+          event_data: null,
+          fn_index: 1,
+          trigger_id: 7,
+          session_hash: "hj5ib8ch34m"
+        })
+      }).then(response => {
+        // logger.success(response);
+      }).catch(error => {
+        logger.error('请求出错:', error);
+      });
+      fetch('https://ap123-sdxl-lightning.hf.space/queue/data?session_hash=hj5ib8ch34m', {
+        method: 'GET',
+        headers: {
+          'sec-ch-ua': '"Chromium";v="124", "Microsoft Edge";v="124", "Not-A.Brand";v="99"',
+          'Accept': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'sec-ch-ua-mobile': '?0',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 Edg/124.0.0.0',
+          'sec-ch-ua-platform': '"Windows"',
+          'Sec-Fetch-Site': 'same-origin',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Dest': 'empty',
+          'Referer': 'https://ap123-sdxl-lightning.hf.space/?__theme=light',
+          'Accept-Encoding': 'gzip, deflate, br, zstd',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6'
+        }
+      }).then(response => {
+        const reader = response.body.getReader();
+        let partialData = '';
+
+        const readStream = () => {
+          return reader.read().then(({done, value}) => {
+            if (done) {
+              return partialData;
+            }
+
+            const chunk = new TextDecoder().decode(value);
+
+            partialData += chunk;
+
+            const lines = partialData.split('\n');
+
+            lines.forEach(line => {
+              if (line.startsWith('data:')) {
+                const jsonData = line.substring(5);
+                try {
+                  const data = JSON.parse(jsonData);
+                  if (data.msg === 'process_completed') {
+                    const output = data.output;
+                    const dataUrl = output.data[0].url;
+                    // logger.success('最终数据URL：', dataUrl);
+                    resultUrl = dataUrl;
+                  }
+                } catch (error) {
+                  logger.error('解析JSON时出错：', error);
+                }
+              }
+            });
+
+            return readStream();
+          });
+        };
+        readStream().then(() => {
+          session.send(h.image(resultUrl));
+        });
+
+      })
+        .catch(error => {
+          logger.error('Error fetching data:', error);
+        });
+
+    });
+
   const voiceInstructions = {
     "以里illi": ["illi-Bert-VITS2"],
 
@@ -122,7 +225,7 @@ export function apply(ctx: Context) {
           author = 'Meteorakuma';
         } else if (specialInstructionssrcreForhanson91696.includes(instruction)) {
           author = 'hanson91696';
-        }else if (specialInstructionssrcreForRayzggz.includes(instruction)) {
+        } else if (specialInstructionssrcreForRayzggz.includes(instruction)) {
           author = 'Rayzggz';
         }
 
@@ -248,7 +351,7 @@ export function apply(ctx: Context) {
       0.5: ['东雪莲', '丁真', '珈乐', '乃琳', '七海', '奶绿', '尼奈', '科比', '嘉然', '炫神', '电棍', '阿梓'],
       0.2: ['永雏塔菲', '孙笑川', '星瞳', '向晚', '永雏小菲', '剑魔', '贝拉', '扇宝', '恬豆', '黑桃影', '卖卖', '鹿鸣', '文静', '山泥若',
         '雪糕', '柯洁', '米诺', '探路者', '雫るる', '动力小子', '地平线', '暴雷', '寻血猎犬', '播音员', '疯玛吉', '恶灵', '沃特森', '万蒂奇', '罗芭', '艾许',
-        '懒羊羊', '幻象', '瓦尔基里', '弹道', '密客', '亡灵', 'BT7274', '北极星泰坦', '帝王泰坦', '克烈', '露早', '力巴尔','以里illi'],
+        '懒羊羊', '幻象', '瓦尔基里', '弹道', '密客', '亡灵', 'BT7274', '北极星泰坦', '帝王泰坦', '克烈', '露早', '力巴尔', '以里illi'],
       0.6: ['坏女人星瞳', '梅西', '陈泽'],
       0.3: ['皮特174', '柚恩']
     };
